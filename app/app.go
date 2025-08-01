@@ -47,6 +47,6 @@ func setupRoutes(app *echo.Echo) {
 
 	app.POST("/createTask", func(c echo.Context) error { panic("todo") })
 	app.POST("/appendTask", func(c echo.Context) error { panic("todo") })
-	app.POST("/checkTask", func(c echo.Context) error { panic("todo") })
-	app.POST("/downloadTask", func(c echo.Context) error { panic("todo") })
+	app.GET("/checkTask/:taskid", func(c echo.Context) error { panic("todo") })
+	app.GET("/downloadTask/:taskid", func(c echo.Context) error { panic("todo") })
 }
