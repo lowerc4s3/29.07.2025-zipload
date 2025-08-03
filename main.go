@@ -25,7 +25,7 @@ func main() {
 		},
 		3,
 	)
-	taskService := new(task.TaskService)
+	taskService := task.NewTaskService(3, 3)
 	handler := app.NewHandler(batchService, taskService)
 
 	app := app.NewApp(handler)

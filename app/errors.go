@@ -7,10 +7,12 @@ import (
 )
 
 var (
-	ErrMalformedRequest = echo.NewHTTPError(http.StatusBadRequest, "malformed body")
-	ErrMalformedID      = echo.NewHTTPError(http.StatusBadRequest, "malformed ID")
-	ErrDownload         = echo.NewHTTPError(http.StatusBadGateway, "all requested resources returned error")
-	ErrForbiddenMime    = echo.NewHTTPError(http.StatusBadRequest, "all files had forbidden type")
-	ErrTaskNotFound     = echo.NewHTTPError(http.StatusNotFound, "no task found with provided ID")
-	ErrTooManyTasks     = echo.NewHTTPError(http.StatusServiceUnavailable, "tasks' max amount achieved")
+	HttpErrMalformedRequest = echo.NewHTTPError(http.StatusBadRequest, "malformed body")
+	HttpErrMalformedID      = echo.NewHTTPError(http.StatusBadRequest, "malformed ID")
+	HttpErrDownload         = echo.NewHTTPError(http.StatusBadGateway, "all requested resources returned error")
+	HttpErrForbiddenMime    = echo.NewHTTPError(http.StatusBadRequest, "all files had forbidden type")
+	HttpErrTaskNotFound     = echo.NewHTTPError(http.StatusNotFound, "no task found with provided ID")
+	HttpErrTooManyTasks     = echo.NewHTTPError(http.StatusServiceUnavailable, "server is busy")
+	HttpErrTooManyTaskFiles = echo.NewHTTPError(http.StatusBadRequest, "too many files requested for the task")
+	HttpErrTooManySources   = echo.NewHTTPError(http.StatusBadRequest, "too many sources requested")
 )

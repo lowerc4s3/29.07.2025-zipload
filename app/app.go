@@ -48,5 +48,5 @@ func setupRoutes(app *echo.Echo, h *Handler) {
 	app.POST("/createTask", h.CreateTask)
 	app.POST("/appendTask", h.AppendTask)
 	app.GET("/checkTask/:taskid", h.CheckTask)
-	app.GET("/downloadTask/:taskid", h.DownloadTask)
+	app.GET("/downloadTask/:taskid", h.DownloadTask).Name = "downloadTask"
 }
