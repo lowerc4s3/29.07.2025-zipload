@@ -11,8 +11,8 @@ import (
 )
 
 type DownloadResult struct {
-	File *MIMEFile
-	Err  error
+	Ok  *MIMEFile
+	Err error
 }
 
 type MIMEFile struct {
@@ -32,9 +32,9 @@ func DownloadBatch(ctx context.Context, sources []string) <-chan DownloadResult 
 			file, err := Download(ctx, url)
 			if err != nil {
 				out <- DownloadResult{Err: err}
-				return
+			} else {
+				out <- DownloadResult{Ok: file}
 			}
-			out <- DownloadResult{File: file}
 		}(url)
 	}
 
