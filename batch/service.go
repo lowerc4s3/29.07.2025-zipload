@@ -95,13 +95,13 @@ func (s *BatchSerivce) DownloadAll(ctx context.Context, sources []string) ([]byt
 		}
 
 		// If downloaded file's type is forbidden, skip it
-		if _, ok := s.allowedMIMEs[result.File.MIME]; !ok {
-			errs = append(errs, fmt.Errorf("%w: %v", ErrForbiddenMIME, result.File.MIME))
+		if _, ok := s.allowedMIMEs[result.Ok.MIME]; !ok {
+			errs = append(errs, fmt.Errorf("%w: %v", ErrForbiddenMIME, result.Ok.MIME))
 			continue
 		}
 
 		filesCounter++
-		inCh <- result.File
+		inCh <- result.Ok
 	}
 	close(inCh)
 	inClosed = true
