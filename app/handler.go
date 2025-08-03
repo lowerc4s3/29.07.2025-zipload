@@ -1,16 +1,18 @@
 package app
 
 import (
+	"context"
 	"errors"
 	"net/http"
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
+	"github.com/lowerc4s3/29.07.2025-zipload/batch"
 	"github.com/lowerc4s3/29.07.2025-zipload/models"
 )
 
 type BatchService interface {
-	DownloadAll(sources []string) ([]byte, error)
+	DownloadAll(ctx context.Context, sources []string) ([]byte, error)
 }
 
 type TaskService interface {
@@ -25,21 +27,28 @@ type Handler struct {
 	task  TaskService
 }
 
+func NewHandler(batch BatchService, task TaskService) *Handler {
+	return &Handler{
+		batch: batch,
+		task:  task,
+	}
+}
+
 func (h *Handler) DownloadBatch(c echo.Context) error {
-	request := new(models.Batch)
+	request := new(batch.Batch)
 	if err := c.Bind(request); err != nil {
 		return ErrMalformedRequest.WithInternal(err)
 	}
 
-	archive, err := h.batch.DownloadAll(request.Sources)
+	archive, err := h.batch.DownloadAll(c.Request().Context(), request.Sources)
 	status := http.StatusOK
 	if err != nil {
-		if len(archive) == 0 {
-			return echo.NewHTTPError(http.StatusBadGateway, echo.Map{
-				"description": "all requested resources returned error",
-				"errors":      err.(interface{ Unwrap() []error }).Unwrap(),
-			})
+		if errors.Is(err, batch.ErrForbiddenMIME) {
+			return ErrForbiddenMime
+		} else if !errors.Is(err, batch.ErrPartitialArchive) {
+			return ErrDownload
 		}
+
 		// HACK: Using HTTP 206 code for partitial success
 		// which is not idiomatic use of this status
 		// but does the job of telling the client that

@@ -7,11 +7,11 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-func NewApp() *echo.Echo {
+func NewApp(h *Handler) *echo.Echo {
 	app := echo.New()
 	app.Use(middleware.Recover())
 	app.Use(newZerologMiddleware(&log.Logger))
-	setupRoutes(app)
+	setupRoutes(app, h)
 	return app
 }
 
@@ -42,11 +42,11 @@ func newZerologMiddleware(logger *zerolog.Logger) echo.MiddlewareFunc {
 	})
 }
 
-func setupRoutes(app *echo.Echo) {
-	app.POST("/downloadBatch", func(c echo.Context) error { panic("todo") })
+func setupRoutes(app *echo.Echo, h *Handler) {
+	app.POST("/downloadBatch", h.DownloadBatch)
 
-	app.POST("/createTask", func(c echo.Context) error { panic("todo") })
-	app.POST("/appendTask", func(c echo.Context) error { panic("todo") })
-	app.GET("/checkTask/:taskid", func(c echo.Context) error { panic("todo") })
-	app.GET("/downloadTask/:taskid", func(c echo.Context) error { panic("todo") })
+	app.POST("/createTask", h.CreateTask)
+	app.POST("/appendTask", h.AppendTask)
+	app.GET("/checkTask/:taskid", h.CheckTask)
+	app.GET("/downloadTask/:taskid", h.DownloadTask)
 }
