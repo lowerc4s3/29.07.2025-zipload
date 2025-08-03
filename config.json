@@ -1,0 +1,10 @@
+{
+    "port": 8080,
+    "allowed_mimes": [
+        "application/pdf",
+        "image/jpeg"
+    ],
+    "max_sources": 3,
+    "max_tasks": 3,
+    "max_task_files": 3
+}
