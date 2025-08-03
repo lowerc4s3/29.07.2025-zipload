@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 	"github.com/lowerc4s3/29.07.2025-zipload/app"
@@ -16,20 +17,17 @@ import (
 
 func main() {
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stdout})
+	cfg, err := app.ReadConfig()
+	if err != nil {
+		log.Fatal().Err(err).Msg("Failed to get the config")
+	}
 
-	batchService := batch.NewBatchService(
-		// TODO: Impl config file
-		[]string{
-			"image/jpeg",
-			"application/pdf",
-		},
-		3,
-	)
-	taskService := task.NewTaskService(3, 3)
+	batchService := batch.NewBatchService(cfg.AllowedMIMEs, cfg.MaxSources)
+	taskService := task.NewTaskService(cfg.MaxTaskFiles, cfg.MaxTasks)
 	handler := app.NewHandler(batchService, taskService)
 
 	app := app.NewApp(handler)
-	runApp(app, "8080")
+	runApp(app, strconv.Itoa(cfg.Port))
 }
 
 func runApp(app *echo.Echo, port string) {
