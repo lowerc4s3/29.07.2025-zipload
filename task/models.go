@@ -2,11 +2,6 @@ package task
 
 import "encoding/json"
 
-type TaskResponse struct {
-	Files []DownloadInfo `json:"files"`
-	Link  *string        `json:"link"`
-}
-
 type TaskInfo struct {
 	Files []DownloadInfo
 	Ready bool
