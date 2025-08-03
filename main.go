@@ -8,13 +8,27 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/lowerc4s3/29.07.2025-zipload/app"
+	"github.com/lowerc4s3/29.07.2025-zipload/batch"
+	"github.com/lowerc4s3/29.07.2025-zipload/task"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 )
 
 func main() {
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stdout})
-	app := app.NewApp()
+
+	batchService := batch.NewBatchService(
+		// TODO: Impl config file
+		[]string{
+			"image/jpeg",
+			"application/pdf",
+		},
+		3,
+	)
+	taskService := new(task.TaskService)
+	handler := app.NewHandler(batchService, taskService)
+
+	app := app.NewApp(handler)
 	runApp(app, "8080")
 }
 
